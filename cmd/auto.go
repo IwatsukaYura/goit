@@ -8,7 +8,6 @@ import (
 	"go_git_cli/git"
 	"go_git_cli/openai"
 	"strings"
-	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -21,10 +20,10 @@ var autoCmd = &cobra.Command{
 	Use:   "auto",
 	Short: "You can execute git flow automatically",
 	Long:  `This is a tool that allows you to perform git add, commit, and push in one go.`,
+
 	Run: func(cmd *cobra.Command, args []string) {
 		var commitMsg string
 		git.Add()
-		time.Sleep(3 * time.Second)
 		if useAI {
 			diff, err := git.GetDiff()
 			if err != nil {
