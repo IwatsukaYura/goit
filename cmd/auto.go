@@ -4,6 +4,7 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"fmt"
 	"go_git_cli/git"
 
 	"github.com/spf13/cobra"
@@ -14,9 +15,13 @@ var message string
 // autoCmd represents the auto command
 var autoCmd = &cobra.Command{
 	Use:   "auto",
-	Short: "You can execute git flow aytomatically",
+	Short: "You can execute git flow automatically",
 	Long:  `This is a tool that allows you to perform git add, commit, and push in one go.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if message == "" {
+			fmt.Println("❌ Commit message is empty. Use -m to specify a message.")
+			return
+		}
 		git.Add()
 		git.Commit(message)
 		git.Push()
@@ -25,7 +30,7 @@ var autoCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(autoCmd)
-	autoCmd.Flags().StringVarP(&message, "--message", "m", "commit", "commit")
+	autoCmd.Flags().StringVarP(&message, "message", "m", "commit", "commit message (default: \"commit\")")
 
 	// Here you will define your flags and configuration settings.
 
