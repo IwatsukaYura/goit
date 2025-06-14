@@ -22,6 +22,10 @@ var autoCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 		var commitMsg string
+		fmt.Println("===================================")
+		fmt.Println("🚀 Executing Git Auto Commit Flow")
+		fmt.Println("===================================")
+
 		git.Add()
 		if useAI {
 			diff, err := git.GetDiff()
@@ -37,7 +41,9 @@ var autoCmd = &cobra.Command{
 				return
 			}
 			commitMsg = msg
+			fmt.Println("===================================")
 			fmt.Println("💬 AI-generated commit message:")
+			fmt.Println("===================================")
 			fmt.Println(commitMsg)
 		} else {
 			if message == "" {

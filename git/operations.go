@@ -16,7 +16,10 @@ func Add() {
 	if err != nil {
 		fmt.Println("⚠️ Error adding all files")
 	} else {
+		fmt.Println("===================================")
 		fmt.Println("🚀 files added successfully")
+		fmt.Println("===================================")
+
 	}
 }
 
@@ -28,7 +31,10 @@ func Commit(message string) {
 	if err != nil {
 		fmt.Println("⚠️ Error commit files")
 	} else {
+		fmt.Println("===================================")
 		fmt.Println("🚀 files commited successfully")
+		fmt.Println("===================================")
+
 	}
 }
 
@@ -40,7 +46,9 @@ func Push() {
 	if err != nil {
 		fmt.Println("⚠️ Error push files")
 	} else {
+		fmt.Println("===================================")
 		fmt.Println("🚀 files pushed successfully")
+		fmt.Println("===================================")
 	}
 }
 
