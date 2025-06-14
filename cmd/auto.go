@@ -4,12 +4,12 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-	"os"
-	"os/exec"
+	"go_git_cli/git"
 
 	"github.com/spf13/cobra"
 )
+
+var message string
 
 // autoCmd represents the auto command
 var autoCmd = &cobra.Command{
@@ -17,41 +17,15 @@ var autoCmd = &cobra.Command{
 	Short: "You can execute git flow aytomatically",
 	Long:  `This is a tool that allows you to perform git add, commit, and push in one go.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		gitAddCmd := exec.Command("git", "add", ".")
-		gitAddCmd.Stdout = os.Stdout
-		gitAddCmd.Stderr = os.Stderr
-		err1 := gitAddCmd.Run()
-		if err1 != nil {
-			fmt.Println("❌ Error adding all files")
-		} else {
-			fmt.Println("⭕️ files added successfully")
-		}
-
-		gitCommitCmd := exec.Command("git", "commit", "-m", "first commit") //メッセージのところはのちのちLLM生成させたい
-		gitCommitCmd.Stdout = os.Stdout
-		gitCommitCmd.Stderr = os.Stderr
-		err2 := gitCommitCmd.Run()
-		if err2 != nil {
-			fmt.Println("❌ Error commit files")
-		} else {
-			fmt.Println("⭕️ files commited successfully")
-		}
-
-		gitPushCmd := exec.Command("git", "push", "origin", "HEAD")
-		gitPushCmd.Stdout = os.Stdout
-		gitPushCmd.Stderr = os.Stderr
-		err3 := gitPushCmd.Run()
-		if err3 != nil {
-			fmt.Println("❌ Error push files")
-		} else {
-			fmt.Println("⭕️ files pushed successfully")
-		}
-
+		git.Add()
+		git.Commit(message)
+		git.Push()
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(autoCmd)
+	autoCmd.Flags().StringVarP(&message, "--message", "m", "commit", "commit")
 
 	// Here you will define your flags and configuration settings.
 
