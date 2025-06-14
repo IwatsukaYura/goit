@@ -20,7 +20,6 @@ func Add() {
 	} else {
 		fmt.Println("===================================")
 		fmt.Println(color.Green, "🚀 files added successfully", color.Reset)
-		fmt.Println("===================================")
 
 	}
 }

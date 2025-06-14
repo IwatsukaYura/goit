@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+//ConfirmCommitMessage is 
 func ConfirmCommitMessage(commitMessage string) bool {
 	fmt.Println("💬 Suggested commit message is below:")
 	fmt.Printf("\n%s\n", commitMessage)
