@@ -8,6 +8,7 @@ import (
 	"go_git_cli/color"
 	"go_git_cli/git"
 	"go_git_cli/openai"
+	"go_git_cli/utils"
 
 	"github.com/spf13/cobra"
 )
@@ -24,26 +25,29 @@ var autoCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		var commitMsg string
 		fmt.Println("===================================")
-		fmt.Println(color.Green, "🚀 Executing Git Auto Commit Flow", color.Reset)
-		fmt.Println("===================================")
+		fmt.Println(color.Cyan, "🚀 Executing Git Auto Commit Flow", color.Reset)
 
 		git.Add()
 		if useAI {
 			diff, err := git.GetDiff()
 
 			if err != nil || diff == "" {
+				fmt.Println("===================================")
 				fmt.Println(color.Red, "⚠️ Error getting git diff:", err, color.Reset)
+				fmt.Println("===================================")
 				return
 			}
 
 			msg, err := openai.GenerateCommitMessageWithOllama(diff)
 			if err != nil {
+				fmt.Println("===================================")
 				fmt.Println(color.Red, "⚠️ Error generating commit message:", err, color.Reset)
+				fmt.Println("===================================")
 				return
 			}
 			commitMsg = msg
 			fmt.Println("===================================")
-			fmt.Println("💬 AI-generated commit message:")
+			fmt.Println(color.Cyan, "💬 AI-generated commit message:", color.Reset)
 			fmt.Println("===================================")
 			fmt.Println(commitMsg)
 		} else {
@@ -53,7 +57,12 @@ var autoCmd = &cobra.Command{
 			}
 			commitMsg = message
 		}
-		git.Commit(commitMsg)
+		if utils.ConfirmCommitMessage(commitMsg) {
+			git.Commit(commitMsg)
+		} else {
+			return
+		}
+
 		git.Push()
 	},
 }
