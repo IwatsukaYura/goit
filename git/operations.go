@@ -6,6 +6,8 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
+	"go_git_cli/color"
 )
 
 func Add() {
@@ -17,7 +19,7 @@ func Add() {
 		fmt.Println("⚠️ Error adding all files")
 	} else {
 		fmt.Println("===================================")
-		fmt.Println("🚀 files added successfully")
+		fmt.Println(color.Green, "🚀 files added successfully", color.Reset)
 		fmt.Println("===================================")
 
 	}
@@ -32,7 +34,7 @@ func Commit(message string) {
 		fmt.Println("⚠️ Error commit files")
 	} else {
 		fmt.Println("===================================")
-		fmt.Println("🚀 files commited successfully")
+		fmt.Println(color.Green, "🚀 files commited successfully", color.Reset)
 		fmt.Println("===================================")
 
 	}
@@ -47,7 +49,7 @@ func Push() {
 		fmt.Println("⚠️ Error push files")
 	} else {
 		fmt.Println("===================================")
-		fmt.Println("🚀 files pushed successfully")
+		fmt.Println(color.Green, "🚀 files pushed successfully", color.Reset)
 		fmt.Println("===================================")
 	}
 }

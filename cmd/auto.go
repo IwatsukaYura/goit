@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+	"go_git_cli/color"
 	"go_git_cli/git"
 	"go_git_cli/openai"
 
@@ -23,7 +24,7 @@ var autoCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		var commitMsg string
 		fmt.Println("===================================")
-		fmt.Println("🚀 Executing Git Auto Commit Flow")
+		fmt.Println(color.Green, "🚀 Executing Git Auto Commit Flow", color.Reset)
 		fmt.Println("===================================")
 
 		git.Add()
@@ -31,13 +32,13 @@ var autoCmd = &cobra.Command{
 			diff, err := git.GetDiff()
 
 			if err != nil || diff == "" {
-				fmt.Println("⚠️ Error getting git diff:", err)
+				fmt.Println(color.Red, "⚠️ Error getting git diff:", err, color.Reset)
 				return
 			}
 
 			msg, err := openai.GenerateCommitMessageWithOllama(diff)
 			if err != nil {
-				fmt.Println("⚠️ Error generating commit message:", err)
+				fmt.Println(color.Red, "⚠️ Error generating commit message:", err, color.Reset)
 				return
 			}
 			commitMsg = msg
@@ -47,7 +48,7 @@ var autoCmd = &cobra.Command{
 			fmt.Println(commitMsg)
 		} else {
 			if message == "" {
-				fmt.Println("❌ Commit message is empty. Use -m to specify a message.")
+				fmt.Println(color.Red, "⚠️ Commit message is empty. Use -m to specify a message.", color.Reset)
 				return
 			}
 			commitMsg = message
