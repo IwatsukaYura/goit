@@ -24,7 +24,7 @@ var autoCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		var commitMsg string
 		git.Add()
-		time.Sleep(1 * time.Second)
+		time.Sleep(3 * time.Second)
 		if useAI {
 			diff, err := git.GetDiff()
 			if err != nil {
