@@ -37,6 +37,16 @@ var autoCmd = &cobra.Command{
 			fmt.Println("⭕️ files commited successfully")
 		}
 
+		gitPushCmd := exec.Command("git", "push", "origin", "HEAD")
+		gitPushCmd.Stdout = os.Stdout
+		gitPushCmd.Stderr = os.Stderr
+		err3 := gitPushCmd.Run()
+		if err3 != nil {
+			fmt.Println("❌ Error push files")
+		} else {
+			fmt.Println("⭕️ files pushed successfully")
+		}
+
 	},
 }
 
