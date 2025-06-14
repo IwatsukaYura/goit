@@ -1,5 +1,5 @@
 /*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
+Copyright © 2025 IwatsukaYura <iwatsukayura@gmail.com>
 */
 package cmd
 
@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"go_git_cli/git"
 	"go_git_cli/openai"
-	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -26,19 +25,15 @@ var autoCmd = &cobra.Command{
 		git.Add()
 		if useAI {
 			diff, err := git.GetDiff()
-			if err != nil {
-				fmt.Println("❌ Error getting git diff:", err)
-				return
-			}
 
-			if strings.TrimSpace(diff) == "" {
-				fmt.Println("⚠️  No staged changes detected. Did you forget to `git add`?")
+			if err != nil || diff == "" {
+				fmt.Println("⚠️ Error getting git diff:", err)
 				return
 			}
 
 			msg, err := openai.GenerateCommitMessageWithOllama(diff)
 			if err != nil {
-				fmt.Println("❌ Error generating commit message:", err)
+				fmt.Println("⚠️ Error generating commit message:", err)
 				return
 			}
 			commitMsg = msg

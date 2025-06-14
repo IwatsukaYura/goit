@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 func Add() {
@@ -13,9 +14,9 @@ func Add() {
 	gitAddCmd.Stderr = os.Stderr
 	err := gitAddCmd.Run()
 	if err != nil {
-		fmt.Println("❌ Error adding all files")
+		fmt.Println("⚠️ Error adding all files")
 	} else {
-		fmt.Println("⭕️ files added successfully")
+		fmt.Println("🚀 files added successfully")
 	}
 }
 
@@ -25,9 +26,9 @@ func Commit(message string) {
 	gitCommitCmd.Stderr = os.Stderr
 	err := gitCommitCmd.Run()
 	if err != nil {
-		fmt.Println("❌ Error commit files")
+		fmt.Println("⚠️ Error commit files")
 	} else {
-		fmt.Println("⭕️ files commited successfully")
+		fmt.Println("🚀 files commited successfully")
 	}
 }
 
@@ -37,9 +38,9 @@ func Push() {
 	gitPushCmd.Stderr = os.Stderr
 	err := gitPushCmd.Run()
 	if err != nil {
-		fmt.Println("❌ Error push files")
+		fmt.Println("⚠️ Error push files")
 	} else {
-		fmt.Println("⭕️ files pushed successfully")
+		fmt.Println("🚀 files pushed successfully")
 	}
 }
 
@@ -48,5 +49,9 @@ func GetDiff() (string, error) {
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
+	if strings.TrimSpace(out.String()) == "" {
+		fmt.Println("⚠️  No staged changes detected. Did you forget to `git add`?")
+		return "", fmt.Errorf("no staged changes found")
+	}
 	return out.String(), err
 }
