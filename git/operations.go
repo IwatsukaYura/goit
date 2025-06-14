@@ -20,7 +20,7 @@ func Add() {
 }
 
 func Commit(message string) {
-	gitCommitCmd := exec.Command("git", "commit", "-m", message) //メッセージのところはのちのちLLM生成させたい
+	gitCommitCmd := exec.Command("git", "commit", "-m", message)
 	gitCommitCmd.Stdout = os.Stdout
 	gitCommitCmd.Stderr = os.Stderr
 	err2 := gitCommitCmd.Run()

@@ -37,12 +37,7 @@ var autoCmd = &cobra.Command{
 				return
 			}
 
-			prompt := fmt.Sprintf(`You are an AI assistant that generates concise Git commit messages.
-									Given the following git diff, write a clear, conventional commit message (like "feat: add new login button").
-									Only output the commit message. Do not include any explanation or preamble.
-									Diff:%s`, diff)
-
-			msg, err := openai.GenerateCommitMessageWithOllama(prompt)
+			msg, err := openai.GenerateCommitMessageWithOllama(diff)
 			if err != nil {
 				fmt.Println("❌ Error generating commit message:", err)
 				return
