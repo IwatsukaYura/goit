@@ -1,6 +1,7 @@
 package git
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
@@ -40,4 +41,12 @@ func Push() {
 	} else {
 		fmt.Println("⭕️ files pushed successfully")
 	}
+}
+
+func GetDiff() (string, error) {
+	cmd := exec.Command("git", "diff", "--cached")
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	err := cmd.Run()
+	return out.String(), err
 }

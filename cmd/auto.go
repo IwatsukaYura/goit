@@ -6,11 +6,13 @@ package cmd
 import (
 	"fmt"
 	"go_git_cli/git"
+	"go_git_cli/openai"
 
 	"github.com/spf13/cobra"
 )
 
 var message string
+var useAI bool
 
 // autoCmd represents the auto command
 var autoCmd = &cobra.Command{
@@ -18,19 +20,41 @@ var autoCmd = &cobra.Command{
 	Short: "You can execute git flow automatically",
 	Long:  `This is a tool that allows you to perform git add, commit, and push in one go.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if message == "" {
-			fmt.Println("❌ Commit message is empty. Use -m to specify a message.")
-			return
+		var commitMsg string
+		if useAI {
+			diff, err := git.GetDiff()
+			if err != nil {
+				fmt.Println("❌ Error getting git diff:", err)
+				return
+			}
+
+			msg, err := openai.GenerateCommitMessageWithOllama(diff)
+			if err != nil {
+				fmt.Println("❌ Error generating commit message:", err)
+				return
+			}
+
+			commitMsg = msg
+			fmt.Println("💬 AI-generated commit message:")
+			fmt.Println(commitMsg)
+		} else {
+			if message == "" {
+				fmt.Println("❌ Commit message is empty. Use -m to specify a message.")
+				return
+			}
+			commitMsg = message
 		}
 		git.Add()
-		git.Commit(message)
+		git.Commit(commitMsg)
 		git.Push()
 	},
 }
 
 func init() {
+
 	rootCmd.AddCommand(autoCmd)
 	autoCmd.Flags().StringVarP(&message, "message", "m", "commit", "commit message (default: \"commit\")")
+	autoCmd.Flags().BoolVar(&useAI, "ai", true, "Use AI to generate commit message")
 
 	// Here you will define your flags and configuration settings.
 
