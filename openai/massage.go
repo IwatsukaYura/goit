@@ -6,20 +6,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"go_git_cli/model"
 )
 
-type OllamaRequest struct {
-	Model  string `json:"model"`
-	Prompt string `json:"prompt"`
-}
-
-type OllamaResponse struct {
-	Response string `json:"response"`
-	Done     bool   `json:"done"`
-}
-
 func GenerateCommitMessageWithOllama(diff string) (string, error) {
-	reqBody := OllamaRequest{
+	reqBody := model.OllamaRequest{
 		Model:  "llama3.2", // or llama3, gemma
 		Prompt: fmt.Sprintf("Write a concise and conventional commit message for this diff:\n\n%s", diff),
 	}
@@ -35,7 +27,7 @@ func GenerateCommitMessageWithOllama(diff string) (string, error) {
 	var fullMessage string
 
 	for scanner.Scan() {
-		var part OllamaResponse
+		var part model.OllamaResponse
 		line := scanner.Bytes()
 
 		if err := json.Unmarshal(line, &part); err != nil {
