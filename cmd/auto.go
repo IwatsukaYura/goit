@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"go_git_cli/git"
 	"go_git_cli/openai"
+	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -21,6 +23,8 @@ var autoCmd = &cobra.Command{
 	Long:  `This is a tool that allows you to perform git add, commit, and push in one go.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		var commitMsg string
+		git.Add()
+		time.Sleep(1 * time.Second)
 		if useAI {
 			diff, err := git.GetDiff()
 			if err != nil {
@@ -28,12 +32,19 @@ var autoCmd = &cobra.Command{
 				return
 			}
 
-			msg, err := openai.GenerateCommitMessageWithOllama(diff)
+			if strings.TrimSpace(diff) == "" {
+				fmt.Println("⚠️  No staged changes detected. Did you forget to `git add`?")
+				return
+			}
+
+			prompt := fmt.Sprintf(`Write a concise and conventional Git commit message for the following diff:%s
+									Only output the message without any explanation.`, diff)
+
+			msg, err := openai.GenerateCommitMessageWithOllama(prompt)
 			if err != nil {
 				fmt.Println("❌ Error generating commit message:", err)
 				return
 			}
-
 			commitMsg = msg
 			fmt.Println("💬 AI-generated commit message:")
 			fmt.Println(commitMsg)
@@ -44,7 +55,6 @@ var autoCmd = &cobra.Command{
 			}
 			commitMsg = message
 		}
-		git.Add()
 		git.Commit(commitMsg)
 		git.Push()
 	},
