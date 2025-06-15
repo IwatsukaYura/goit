@@ -8,18 +8,18 @@ import (
 	"strings"
 )
 
-// ConfirmCommitMessage is
+// ConfirmCommitMessage asks the user to confirm the generated commit message.
+// Returns true if the user confirms (y), false otherwise.
 func ConfirmCommitMessage(commitMessage string) bool {
-	fmt.Println("💬 Suggested commit message:")
-	fmt.Printf("%s\n\n", commitMessage)
+	fmt.Print("💬 Suggested commit message:")
+	fmt.Printf("%s%s%s\n\n", color.Cyan, commitMessage, color.Reset)
 
-	
 	for {
 		fmt.Print("commit & push are you ready? (y/n): ")
 		reader := bufio.NewReader(os.Stdin)
 		isReady, _ := reader.ReadString('\n')
 		isReady = strings.TrimSpace(strings.ToLower(isReady))
-		
+
 		switch isReady {
 		case "n":
 			fmt.Println("===================================")

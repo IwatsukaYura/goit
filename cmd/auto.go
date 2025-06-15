@@ -51,10 +51,10 @@ var autoCmd = &cobra.Command{
 			fmt.Println("===================================")
 			fmt.Println(commitMsg)
 		} else {
-			if message == "" {
-				fmt.Println(color.Red, "⚠️ Commit message is empty. Use -m to specify a message.", color.Reset)
-				return
-			}
+			fmt.Println("===================================")
+			fmt.Println(color.Yellow, "⚠️ You don't use AI to create commit message", color.Reset)
+			fmt.Println(color.Yellow, "⚠️ If you'd like to use AI to create commit message, attach option --ai", color.Reset)
+			fmt.Println("===================================")
 			commitMsg = message
 		}
 		if utils.ConfirmCommitMessage(commitMsg) {
@@ -71,7 +71,7 @@ func init() {
 
 	rootCmd.AddCommand(autoCmd)
 	autoCmd.Flags().StringVarP(&message, "message", "m", "commit", "commit message (default: \"commit\")")
-	autoCmd.Flags().BoolVar(&useAI, "ai", true, "Use AI to generate commit message")
+	autoCmd.Flags().BoolVar(&useAI, "ai", false, "Use AI to generate commit message")
 
 	// Here you will define your flags and configuration settings.
 
