@@ -1,6 +1,5 @@
 /*
 Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
@@ -24,6 +23,7 @@ to quickly create a Cobra application.`,
 		fmt.Println("commit called")
 	},
 }
+
 
 func init() {
 	rootCmd.AddCommand(commitCmd)
