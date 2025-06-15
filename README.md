@@ -1,6 +1,8 @@
 # goit - Git Commit Assistant with AI 💡
 
-![alt text](goit_image3.png)
+<div align="center">
+  <img src="goit_image3.png" width="400" alt="goit logo">
+</div>
 
 ## Project Description
 
