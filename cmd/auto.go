@@ -1,57 +1,77 @@
 /*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
+Copyright © 2025 IwatsukaYura <iwatsukayura@gmail.com>
 */
 package cmd
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
+	"go_git_cli/color"
+	"go_git_cli/git"
+	"go_git_cli/openai"
+	"go_git_cli/utils"
 
 	"github.com/spf13/cobra"
 )
 
+var message string
+var useAI bool
+
 // autoCmd represents the auto command
 var autoCmd = &cobra.Command{
 	Use:   "auto",
-	Short: "You can execute git flow aytomatically",
+	Short: "You can execute git flow automatically",
 	Long:  `This is a tool that allows you to perform git add, commit, and push in one go.`,
+
 	Run: func(cmd *cobra.Command, args []string) {
-		gitAddCmd := exec.Command("git", "add", ".")
-		gitAddCmd.Stdout = os.Stdout
-		gitAddCmd.Stderr = os.Stderr
-		err1 := gitAddCmd.Run()
-		if err1 != nil {
-			fmt.Println("❌ Error adding all files")
+		var commitMsg string
+		fmt.Println("===================================")
+		fmt.Println(color.Cyan, "🚀 Executing Git Auto Commit Flow", color.Reset)
+
+		git.Add()
+		if useAI {
+			diff, err := git.GetDiff()
+
+			if err != nil || diff == "" {
+				fmt.Println("===================================")
+				fmt.Println(color.Red, "⚠️ Error getting git diff:", err, color.Reset)
+				fmt.Println("===================================")
+				return
+			}
+
+			msg, err := openai.GenerateCommitMessageWithOllama(diff)
+			if err != nil {
+				fmt.Println("===================================")
+				fmt.Println(color.Red, "⚠️ Error generating commit message:", err, color.Reset)
+				fmt.Println("===================================")
+				return
+			}
+			commitMsg = msg
+			fmt.Println("===================================")
+			fmt.Println(color.Cyan, "💬 AI-generated commit message:", color.Reset)
+			fmt.Println("===================================")
+			fmt.Println(commitMsg)
 		} else {
-			fmt.Println("⭕️ files added successfully")
+			fmt.Println("===================================")
+			fmt.Println(color.Yellow, "⚠️ You don't use AI to create commit message", color.Reset)
+			fmt.Println(color.Yellow, "⚠️ If you'd like to use AI to create commit message, attach option --ai", color.Reset)
+			fmt.Println("===================================")
+			commitMsg = message
+		}
+		if utils.ConfirmCommitMessage(commitMsg) {
+			git.Commit(commitMsg)
+		} else {
+			return
 		}
 
-		gitCommitCmd := exec.Command("git", "commit", "-m", "first commit") //メッセージのところはのちのちLLM生成させたい
-		gitCommitCmd.Stdout = os.Stdout
-		gitCommitCmd.Stderr = os.Stderr
-		err2 := gitCommitCmd.Run()
-		if err2 != nil {
-			fmt.Println("❌ Error commit files")
-		} else {
-			fmt.Println("⭕️ files commited successfully")
-		}
-
-		gitPushCmd := exec.Command("git", "push", "origin", "HEAD")
-		gitPushCmd.Stdout = os.Stdout
-		gitPushCmd.Stderr = os.Stderr
-		err3 := gitPushCmd.Run()
-		if err3 != nil {
-			fmt.Println("❌ Error push files")
-		} else {
-			fmt.Println("⭕️ files pushed successfully")
-		}
-
+		git.Push()
 	},
 }
 
 func init() {
+
 	rootCmd.AddCommand(autoCmd)
+	autoCmd.Flags().StringVarP(&message, "message", "m", "commit", "commit message (default: \"commit\")")
+	autoCmd.Flags().BoolVar(&useAI, "ai", false, "Use AI to generate commit message")
 
 	// Here you will define your flags and configuration settings.
 
